@@ -86,8 +86,6 @@ jobs:
           npm publish --access public ${{ inputs.dry_run && '--dry-run' || '' }}
 
       # The alias pins an exact version of the package above, so it can
-      # only be published once that version is actually resolvable.
-      # The alias pins an exact version of the package above, so it can
       # only be published once that version is actually resolvable - and
       # today's release showed the registry read path lagging the write
       # by minutes.
