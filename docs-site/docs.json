@@ -2,7 +2,11 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "SecRefs",
-  "colors": { "primary": "#22d3a0", "light": "#4ee8b0", "dark": "#16a37e" },
+  "colors": {
+    "primary": "#22d3a0",
+    "light": "#4ee8b0",
+    "dark": "#16a37e"
+  },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
@@ -35,16 +39,33 @@
               "guides/troubleshooting"
             ]
           },
-          { "group": "Reference", "pages": ["reference/cli", "reference/node-api"] }
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/cli",
+              "reference/node-api"
+            ]
+          }
         ]
       }
     ]
   },
   "navbar": {
-    "links": [{ "label": "GitHub", "href": "https://github.com/secrefs/secrefs" }],
-    "primary": { "type": "button", "label": "secrefs.com", "href": "https://secrefs.com" }
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/secrefs/secrefs"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "secrefs.com",
+      "href": "https://secrefs.com"
+    }
   },
   "footer": {
-    "socials": { "github": "https://github.com/secrefs/secrefs" }
+    "socials": {
+      "github": "https://github.com/secrefs/secrefs"
+    }
   }
 }
