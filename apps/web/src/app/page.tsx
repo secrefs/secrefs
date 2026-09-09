@@ -50,6 +50,7 @@ const NAV_LINKS = [
   { href: "#how-it-works", label: "How it works" },
   { href: "#providers", label: "Providers" },
   { href: "#sandbox", label: "Sandbox" },
+  { href: "/agents", label: "For agents" },
   { href: "/for-vendors", label: "For vendors" },
 ];
 
@@ -363,6 +364,9 @@ export default function HomePage() {
             secrefs.com
           </div>
           <div className="flex flex-wrap justify-center gap-6">
+            <a href="/agents" className="hover:text-white">
+              For agents
+            </a>
             <a href="/for-vendors" className="hover:text-white">
               For vendors
             </a>
