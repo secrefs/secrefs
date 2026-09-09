@@ -69,12 +69,28 @@ jobs:
           fi
         if: startsWith(github.ref, 'refs/tags/')
 
+      # Skip a version that is already on the registry rather than
+      # failing. A release can fail partway - ours did, on the alias -
+      # and a re-run must be able to finish the job instead of dying on
+      # the step that already succeeded. npm refuses to republish a
+      # version, so without this the only recovery is a version bump for
+      # a release that was otherwise fine.
       - name: Publish @secrefs/node
         working-directory: packages/node
-        run: npm publish --access public ${{ inputs.dry_run && '--dry-run' || '' }}
+        run: |
+          V=$(node -p "require('./package.json').version")
+          if npm view "@secrefs/node@$V" version >/dev/null 2>&1; then
+            echo "@secrefs/node@$V is already published - skipping"
+            exit 0
+          fi
+          npm publish --access public ${{ inputs.dry_run && '--dry-run' || '' }}
 
       # The alias pins an exact version of the package above, so it can
       # only be published once that version is actually resolvable.
+      # The alias pins an exact version of the package above, so it can
+      # only be published once that version is actually resolvable - and
+      # today's release showed the registry read path lagging the write
+      # by minutes.
       - name: Wait for @secrefs/node to be resolvable
         if: ${{ !inputs.dry_run }}
         run: |
@@ -107,7 +123,13 @@ jobs:
 
       - name: Publish the secrefs alias
         working-directory: packages/npm-alias
-        run: npm publish --access public ${{ inputs.dry_run && '--dry-run' || '' }}
+        run: |
+          V=$(node -p "require('./package.json').version")
+          if npm view "secrefs@$V" version >/dev/null 2>&1; then
+            echo "secrefs@$V is already published - skipping"
+            exit 0
+          fi
+          npm publish --access public ${{ inputs.dry_run && '--dry-run' || '' }}
 
   pypi:
     name: Publish to PyPI
