@@ -30,6 +30,7 @@ const NAV_LINKS = [
   { href: "/#how-it-works", label: "How it works" },
   { href: "/#sandbox", label: "Sandbox" },
   { href: "/agents", label: "For agents" },
+  { href: "/articles", label: "Articles" },
   { href: "https://docs.secrefs.com", label: "Docs" },
   { href: "/for-vendors", label: "For vendors" },
 ];

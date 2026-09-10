@@ -51,6 +51,7 @@ const NAV_LINKS = [
   { href: "#providers", label: "Providers" },
   { href: "#sandbox", label: "Sandbox" },
   { href: "/agents", label: "For agents" },
+  { href: "/articles", label: "Articles" },
   { href: "https://docs.secrefs.com", label: "Docs" },
   { href: "/for-vendors", label: "For vendors" },
 ];
@@ -373,6 +374,9 @@ export default function HomePage() {
             </a>
             <a href="https://github.com/secrefs/secrefs" className="hover:text-white">
               GitHub
+            </a>
+            <a href="/articles" className="hover:text-white">
+              Articles
             </a>
             <a href="https://docs.secrefs.com" className="hover:text-white">
               Docs
