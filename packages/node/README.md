@@ -117,8 +117,8 @@ Every reference resolves concurrently, and one failure never blocks the others.
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+Apache-2.0. See [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
 
-The client libraries are MIT permanently and unconditionally — the SecRefs
+The client libraries are Apache-2.0 permanently and unconditionally — the SecRefs
 control plane is licensed separately. See
 [LICENSING.md](https://github.com/secrefs/secrefs/blob/main/LICENSING.md).

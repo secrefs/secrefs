@@ -118,7 +118,7 @@ I'd have taken that option on the third OTP failure. I'd have taken it happily.
 
 ---
 
-SecRefs is MIT-licensed and reads from the vault you already run — AWS Secrets
+SecRefs is Apache-2.0 licensed and reads from the vault you already run — AWS Secrets
 Manager, HashiCorp Vault, or Bitwarden. It stores nothing.
 
 ```bash

@@ -1,0 +1,14 @@
+SecRefs
+Copyright 2026 Armistice Group
+
+This product includes software developed at Armistice Group
+(https://secrefs.com).
+
+The client libraries (packages/node, packages/python, packages/npm-alias)
+and the marketing site (apps/web) are licensed under the Apache License,
+Version 2.0.
+
+The control plane (apps/control-plane) and admin console
+(apps/control-plane-admin) are NOT covered by that license. They are
+licensed under the Business Source License 1.1 and carry their own
+LICENSE files. See LICENSING.md.
