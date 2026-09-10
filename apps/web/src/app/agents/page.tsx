@@ -269,7 +269,7 @@ export default function AgentsPage() {
             <a href="https://github.com/secrefs/secrefs" className="hover:text-white">
               GitHub
             </a>
-            <span>MIT Licensed</span>
+            <span>Apache-2.0</span>
           </div>
         </div>
       </footer>

@@ -6,19 +6,40 @@ directory the code lives in, and every licensed directory carries its own
 
 | Path | License | What it is |
 |---|---|---|
-| `packages/node` | **MIT** | `@secrefs/node` — the Node.js client library and CLI |
-| `packages/python` | **MIT** | `secrefs` — the Python client library and CLI |
-| `apps/web` | **MIT** | The secrefs.com marketing site and sandbox |
+| `packages/node` | **Apache-2.0** | `@secrefs/node` — the Node.js client library and CLI |
+| `packages/python` | **Apache-2.0** | `secrefs` — the Python client library and CLI |
+| `apps/web` | **Apache-2.0** | The secrefs.com marketing site and sandbox |
 | `apps/control-plane` | **BUSL-1.1** | The control plane API |
 | `apps/control-plane-admin` | **BUSL-1.1** | The admin console |
-| everything else | **MIT** | Docs, tooling, CI config |
+| everything else | **Apache-2.0** | Docs, tooling, CI config |
 
 ## Why the split
 
-**The libraries are MIT, permanently and unconditionally.** They are what you
-put in your own applications, and nobody should have to think about licensing
-to import a client library. Use them commercially, embed them in a closed
-product, fork them — no permission needed, no strings.
+**The libraries are Apache-2.0, permanently and unconditionally.** They are what
+you put in your own applications, and nobody should have to think about
+licensing to import a client library. Use them commercially, embed them in a
+closed product, fork them — no permission needed, no strings.
+
+Apache-2.0 rather than MIT for three reasons, all of which matter more for a
+library that handles credentials than they would for a general utility:
+
+- **It grants patent rights explicitly.** MIT is silent on patents, and that
+  silence is a real question for the legal review a credential-handling
+  dependency tends to attract. Apache-2.0 answers it in the licence text.
+- **It has a patent retaliation clause.** If someone uses this code and then
+  sues over patents in it, their grant terminates. That is defensive, not
+  aggressive — it means a competitor cannot turn this project's own code
+  against it.
+- **It withholds trademark rights explicitly.** "SecRefs" is a name across a
+  domain, an npm scope, a PyPI project and a GitHub organisation. MIT says
+  nothing about marks; Apache-2.0 says the licence does not grant them.
+
+None of this narrows what you can do with the code. Apache-2.0 is on the same
+corporate pre-approved lists MIT is, and is the default for CNCF projects.
+
+Versions published before this change remain MIT, and that does not expire —
+`@secrefs/node@0.1.0`, `@secrefs/node@0.2.0` and `secrefs 0.2.0` on PyPI are
+MIT forever. Everything from the next release onward is Apache-2.0.
 
 **The control plane is source-available under the Business Source License.**
 You can read all of it, audit it, modify it, and run it. The one thing you

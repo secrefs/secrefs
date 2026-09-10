@@ -164,7 +164,7 @@ export default function Article() {
 
         <div className="!mt-14 rounded-xl border border-white/10 bg-white/[0.02] p-6 text-[0.95rem] leading-relaxed text-slate-400">
           <p>
-            <Strong>SecRefs</Strong> is MIT-licensed and reads from the vault you already run — AWS
+            <Strong>SecRefs</Strong> is Apache-2.0 licensed and reads from the vault you already run — AWS
             Secrets Manager, HashiCorp Vault, or Bitwarden. It stores nothing.
           </p>
           <p className="mt-3 font-mono text-sm text-slate-500">
@@ -204,7 +204,7 @@ export default function Article() {
             <a href="https://github.com/secrefs/secrefs" className="hover:text-white">
               GitHub
             </a>
-            <span>MIT Licensed</span>
+            <span>Apache-2.0</span>
           </div>
         </div>
       </footer>

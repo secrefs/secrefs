@@ -3,7 +3,7 @@
 [![CI](https://github.com/secrefs/secrefs/actions/workflows/ci.yml/badge.svg)](https://github.com/secrefs/secrefs/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@secrefs/node?label=%40secrefs%2Fnode)](https://www.npmjs.com/package/@secrefs/node)
 [![PyPI](https://img.shields.io/pypi/v/secrefs?label=secrefs)](https://pypi.org/project/secrefs/)
-[![License](https://img.shields.io/badge/license-MIT%20%2F%20BUSL--1.1-blue)](LICENSING.md)
+[![License](https://img.shields.io/badge/license-Apache--2.0%20%2F%20BUSL--1.1-blue)](LICENSING.md)
 
 Put a reference in your config instead of a secret.
 
@@ -155,15 +155,15 @@ credentials worked and a policy refused one secret. See
 
 | Path | What it is | License |
 |---|---|---|
-| `packages/node` | TypeScript engine + `secrefs` CLI → [`@secrefs/node`](https://www.npmjs.com/package/@secrefs/node) | MIT |
-| `packages/python` | Python SDK + `secrefs-py` CLI, API parity → [`secrefs`](https://pypi.org/project/secrefs/) | MIT |
-| `packages/npm-alias` | `npm install secrefs` alias for the scoped package | MIT |
-| `apps/web` | secrefs.com + in-browser sandbox (S3 + CloudFront, CDK) | MIT |
+| `packages/node` | TypeScript engine + `secrefs` CLI → [`@secrefs/node`](https://www.npmjs.com/package/@secrefs/node) | Apache-2.0 |
+| `packages/python` | Python SDK + `secrefs-py` CLI, API parity → [`secrefs`](https://pypi.org/project/secrefs/) | Apache-2.0 |
+| `packages/npm-alias` | `npm install secrefs` alias for the scoped package | Apache-2.0 |
+| `apps/web` | secrefs.com + in-browser sandbox (S3 + CloudFront, CDK) | Apache-2.0 |
 | `apps/control-plane` | Org vault connections, RBAC, scoped credential minting | BUSL-1.1 |
 | `apps/control-plane-admin` | Admin console, works against hosted or self-hosted | BUSL-1.1 |
-| `docs-site` | Mintlify user documentation | MIT |
+| `docs-site` | Mintlify user documentation | Apache-2.0 |
 
-**The client libraries are MIT, permanently and unconditionally.** The control
+**The client libraries are Apache-2.0, permanently and unconditionally.** The control
 plane is source-available under BUSL-1.1 — free for personal and non-production
 use, converting to Apache 2.0 on 2030-09-01. See [LICENSING.md](LICENSING.md)
 for why, in short: it handles credentials, so its claims should be checkable by

@@ -49,4 +49,4 @@ Full documentation lives with the canonical package:
 
 ## License
 
-MIT.
+Apache-2.0.

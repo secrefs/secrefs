@@ -283,7 +283,7 @@ export default function ForVendorsPage() {
             <a href="https://docs.secrefs.com" className="hover:text-white">
               Docs
             </a>
-            <span>MIT Licensed</span>
+            <span>Apache-2.0</span>
           </div>
         </div>
       </footer>

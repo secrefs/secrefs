@@ -2,7 +2,7 @@
   "name": "secrefs",
   "version": "0.2.0",
   "description": "Alias for @secrefs/node - the Bring Your Own Vault secret reference engine. Installs and re-exports the real package.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -14,7 +14,8 @@
     "index.d.ts",
     "bin",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "NOTICE"
   ],
   "keywords": [
     "secrets",
