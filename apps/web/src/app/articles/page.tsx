@@ -19,7 +19,7 @@ const ARTICLES = [
     slug: "transcripts-are-a-credential-sink",
     title: "Transcripts are a credential sink",
     standfirst:
-      "A secret pasted into an agent session lands in a record that can't be rewritten, gets replayed constantly, propagates by sharing, and triggers no alert.",
+      "npm wanted a one-time password. On the third failed attempt I pasted the token into the chat instead, and it sat there for two days.",
     date: "September 2026",
   },
 ];

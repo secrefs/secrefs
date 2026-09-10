@@ -1,144 +1,125 @@
 # Transcripts are a credential sink
 
-A few days ago I pasted an npm token with publish rights into a chat with a
-coding agent.
+npm wanted a one-time password.
 
-I knew better. I'd spent that same week building a tool whose entire purpose is
-stopping people from doing exactly that. The agent was mid-task, the publish was
-blocked on auth, and typing the token was the fastest way to unblock it. So I
-typed it.
+I typed six digits. npm said they were wrong, or expired — it doesn't
+distinguish, which is its own small cruelty. I generated another set, and by the
+time I'd pasted those the publish had timed out. On the third go I stopped
+fighting it and pasted the token into the chat instead, and told the agent to
+use that.
 
-The agent used it three times. The task worked. And the token sat in that
-transcript — a live credential with publish rights to two packages — until I
-revoked it two days later.
+It published the package. Then it published the second one. Then it carried on
+with the rest of the afternoon's work, and the token sat there in the
+conversation for two more days before I remembered to go and revoke it.
 
-Nothing bad happened. But I want to be precise about *why* nothing bad happened:
-I got lucky, and I noticed. Neither of those is a control.
+Nothing came of it. Nobody found it, nothing got compromised, and this isn't a
+war story. I'm writing it down because of how completely reasonable the decision
+felt at the time, and because I was — that same week, in that same repository —
+building a tool whose entire purpose is stopping people from doing that.
 
-## This is not the leak you already know how to handle
+## The part I keep coming back to
 
-Every other place a secret escapes to, we have a remedy for. Secrets in Git get
-caught by push protection and purged with `git filter-repo`. Secrets in logs get
-scrubbed by a redaction filter and aged out by retention. Secrets in CI get
-masked in output.
+I've leaked credentials in most of the usual ways. Committed an `.env` once.
+Left a key in a Slack thread. Both were embarrassing and both were fixable in
+about ten minutes, because we've spent twenty years building the fixes.
 
-A secret in a transcript has four properties that break all of that.
+Push protection catches the commit before it lands. `git filter-repo` and a
+force-push handle it if it does. Logs have redaction filters and retention
+windows. CI masks secrets in output. GitHub will email you if it finds your AWS
+key on a public repo. None of this is perfect but it's *there*, and it's mostly
+automatic.
 
-**You can't rewrite it.** There is no `filter-repo` for a conversation. The
-storage isn't yours, the format isn't yours, and there's no operation that
-reaches into the record and removes a string.
+There is nothing like that for a conversation.
 
-**It gets replayed.** This is the one people underestimate. A transcript isn't
-written once and filed. It's re-read on every turn, restored when a session
-resumes, summarised into new contexts when it gets long, and carried into
-whatever comes next. One paste is read back hundreds of times, in places you
-never explicitly sent it.
+You can't rewrite it, because you don't own the storage and there's no operation
+that reaches in and removes a string. You can't age it out, because the retention
+policy isn't yours either. Nothing scans it. Nothing warns you.
 
-**It gets shared.** Sessions end up in screenshots for a bug report, pasted into
-another chat to ask why something failed, forwarded to a colleague, attached to
-a support ticket. Every hop is a copy you cannot recall.
+And it doesn't sit still. This is the part I underestimated: a transcript gets
+re-read constantly. Every turn feeds it back through. Resuming a session pulls it
+up again. Long sessions get summarised into new contexts that carry pieces
+forward. Then there's the ordinary human traffic — you screenshot a bit of it for
+a bug report, paste a chunk into another chat to ask why something failed,
+forward it to someone who's better at Terraform than you are.
 
-**Nothing tells you it leaked.** No scanner. No alert. No push protection. A
-credential in a transcript looks exactly like a credential doing its job — right
-up until it isn't. I only knew about mine because I was the one who pasted it.
+One paste, read back an unknowable number of times, in an unknowable number of
+places.
 
-Put together: it's a credential sink with no purge, unbounded replay, silent
-propagation, and no detection. That's a genuinely new shape, and it arrived with
-agents.
+## "Just don't paste secrets into the chat"
 
-## "Don't paste secrets into the chat" is a wish, not a policy
+Sure. I know.
 
-The obvious response is a rule. Don't do that.
+But look at what I was actually doing. I was three OTP attempts into a publish
+that should have taken thirty seconds, in the middle of a longer piece of work,
+and the token was sitting right there in my password manager. The rule wasn't
+competing with laziness. It was competing with a broken 2FA flow at the exact
+moment I'd stopped caring about anything except getting the package out.
 
-It won't hold, and it's worth understanding why rather than assuming people are
-careless.
+Agents publish things, run migrations, hit production APIs, deploy. Those jobs
+need credentials, and the only way we've offered to supply one is to hand over
+the string. So the rule gets broken — not by people who don't know better, but by
+people who know better and are busy.
 
-Agents deploy things. They publish packages, run migrations, query production,
-call APIs, provision infrastructure. Those tasks *require* credentials. Telling
-someone not to supply one is telling them not to use the tool for the work they
-adopted it to do. So the rule gets broken — not by careless people, but by
-focused ones, at the exact moment their attention is on something else entirely.
+If your control only works when someone is paying attention, you don't have a
+control. You have a preference.
 
-Any control that depends on a human being disciplined at their least disciplined
-moment is not a control.
+## What I actually wanted
 
-I say this as someone who broke my own rule while building the tool that
-enforces it. The rule wasn't the problem. The interface was.
+The thing I was trying to give that agent wasn't a token. It was the ability to
+publish a package. Those aren't the same, they're just usually delivered
+together.
 
-## The agent needs the capability, not the value
-
-Here's the reframe that makes this tractable.
-
-When you paste a token to an agent, you're not trying to give it a string.
-You're trying to give it the *ability to publish*. The string is just the only
-mechanism we've offered.
-
-Those are separable. The agent can hold a **reference** to a credential —
-something that names the secret without being the secret — and resolve it at the
-moment of use, from a vault that authorizes the resolution independently.
+So: give it a name for the credential instead of the credential.
 
 ```bash
-# not this
-NPM_TOKEN=npm_8Fq2xKd0sLpQm4vX1nRb...
-
-# this
+# .env — safe to commit, safe to paste, safe to screenshot
 NPM_TOKEN=sec://aws/npm/ci#token
 ```
-
-Run the task through something that resolves the reference:
 
 ```bash
 secrefs run -- npm publish
 ```
 
-The child process gets the real token in memory. The transcript, the config
-file, and the shell history all hold a pointer that is inert without access to
-the vault — access granted by your cloud identity, not by possession of the
-document.
+The reference gets resolved at the moment of use, from a vault that decides
+independently whether the machine asking is allowed to have it. The child process
+gets a real token. The transcript, the `.env`, and my shell history get a string
+that's worth nothing to anyone who can't already authenticate to my AWS account.
 
-Same outcome. The credential never becomes a permanent part of the record.
+Same publish. Nothing durable left behind.
 
-## What this doesn't do
+## Where this stops working
 
-I'd rather say this plainly than have a security reviewer find it in the first
-five minutes.
+It moves the credential rather than removing it. Something still has to authorize
+that fetch — usually the machine's own cloud credentials. What changes is the
+shape of the exposure: instead of a long-lived token in a document I can't purge,
+there's a short-lived credential scoped by an identity provider I already run and
+already rotate. Better. Not zero. If you were hoping for zero, I don't have it.
 
-**It moves the credential, it doesn't remove one.** Something still has to
-authorize the fetch — usually the machine's ambient cloud credentials. What
-changes is the *shape*: one long-lived token in an unpurgeable document becomes
-a short-lived credential scoped by your existing identity provider and expiring
-on its own. Strictly better. Not zero.
+If the agent decides to print the resolved value, it's back in the transcript and
+we've achieved nothing. This closes the path secrets actually escape through —
+config files, environment setup, the pasted-in-a-hurry token — not deliberate
+output.
 
-**An agent that prints the value leaks it again.** Resolution puts a real string
-in a process. If the agent then echoes it, it's back in the transcript. This
-closes the path secrets normally escape through — config, environment, pasted
-setup — not deliberate output.
+And anything with code execution on my laptop can read the value out of memory
+just as easily as it could have read it out of `.env`. The threat here is the
+record, not the machine.
 
-**Local compromise still wins.** Anything with code execution on the machine can
-read a resolved value out of memory, exactly as it could read a token from
-`.env`. The threat model here is the *record*, not the host.
+## Why bother
 
-What's left after those caveats is still the thing that actually bit me: the
-credential that outlives the task, in a document nobody can purge.
+Most of the security conversation around agents right now is about what they're
+allowed to *do*. Permissions, sandboxes, approval prompts, tool allowlists. All
+reasonable. But there's very little about what they're allowed to *know*, and
+almost nothing about what happens to that knowledge after the task is finished.
 
-## Why this is worth doing now
+The second problem is the easier one. It mostly needs the tooling to stop making
+"paste the live secret" the fastest path.
 
-Two things are true at once. Agents are being handed production credentials at a
-rate that would have been unthinkable for any other class of tool. And the
-security tooling around them is almost entirely about what the agent is allowed
-to *do* — permissions, sandboxes, approval prompts — rather than what it's
-allowed to *know*, and what happens to that knowledge afterward.
-
-The second problem is easier. It just needs the interface to change so that
-handing over a live secret stops being the path of least resistance.
-
-Your agent gets the value. Your transcript gets the reference.
+I'd have taken that option on the third OTP failure. I'd have taken it happily.
 
 ---
 
-SecRefs is MIT-licensed and works with the vault you already run — AWS Secrets
-Manager, HashiCorp Vault, or Bitwarden. It stores nothing and never holds a copy
-of your secrets.
+SecRefs is MIT-licensed and reads from the vault you already run — AWS Secrets
+Manager, HashiCorp Vault, or Bitwarden. It stores nothing.
 
 ```bash
 npm install @secrefs/node
