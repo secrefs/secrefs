@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.3.0
+
+### Changed
+
+- **Relicensed from MIT to Apache-2.0.** Minor rather than patch: a licence
+  change alters the terms you are bound by, and a patch release implies there
+  is nothing to look at.
+
+  Apache-2.0 grants patent rights explicitly where MIT is silent, terminates
+  that grant for anyone who sues over patents in the code, and withholds
+  trademark rights explicitly. All three matter more for a dependency that
+  handles credentials than they would for a general utility. Nothing narrows
+  for users - Apache-2.0 sits on the same corporate pre-approved lists MIT
+  does.
+
+  **0.1.0 and 0.2.0 remain MIT permanently.** This applies from 0.3.0 onward.
+  See LICENSING.md.
+
+- Each published package now ships a `NOTICE` file alongside its `LICENSE`,
+  per Apache convention.
+
+No functional changes to the libraries in this release.
+
 ## 0.2.0
 
 Minor rather than patch: this adds features and narrows a compatibility

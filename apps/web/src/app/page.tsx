@@ -126,7 +126,7 @@ export default function HomePage() {
 
           <TerminalWindow title="quickstart.sh">
             <Prompt>pnpm add @secrefs/node</Prompt>
-            <Line dim>+ @secrefs/node 0.2.0</Line>
+            <Line dim>+ @secrefs/node 0.3.0</Line>
             <div className="h-3" />
             <Prompt>echo &apos;DB_PASSWORD=sec://aws/prod/db#password&apos; {">>"} .env</Prompt>
             <div className="h-3" />
