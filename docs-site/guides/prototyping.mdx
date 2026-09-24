@@ -1,0 +1,93 @@
+---
+title: "A reusable .env"
+description: "Keep one environment file and copy it into every new project. It holds references, so it holds no secrets."
+---
+
+The usual way a new prototype gets its API keys is copy-paste from the last
+one. Which means by the time you have eight side projects, your OpenAI key is
+in eight `.env` files, three of which are in repos you have forgotten the names
+of.
+
+If the file holds references instead of values, none of that happens. The same
+file works everywhere, because there is nothing in it that is specific to a
+project — or secret.
+
+## Set it up once
+
+Declare the things you reach for constantly:
+
+```bash ~/.secrefs/starter.env
+OPENAI_API_KEY=sec://aws/ai/openai#key
+ANTHROPIC_API_KEY=sec://aws/ai/anthropic#key
+SUPABASE_URL=sec://aws/supabase/dev#url
+SUPABASE_ANON_KEY=sec://aws/supabase/dev#anon
+SUPABASE_SERVICE_KEY=sec://aws/supabase/dev#service
+STRIPE_SECRET_KEY=sec://aws/stripe/test#secret
+RESEND_API_KEY=sec://aws/email/resend#key
+```
+
+Keep it wherever you like — a dotfiles repo is fine, which is the point.
+
+## Use it
+
+```bash
+mkdir new-idea && cd new-idea
+cp ~/.secrefs/starter.env .env
+npm install @secrefs/node
+
+secrefs run -- npm run dev
+```
+
+Trim the lines the project doesn't need, or don't — an unused reference is
+never resolved, so leaving all seven in costs nothing but a longer file.
+
+## What this actually buys you
+
+**Rotation reaches everything.** Roll your OpenAI key and every project that
+ever used it picks up the new one, including the prototype you abandoned in
+March. You don't maintain a list, because there's nothing to go back and
+update.
+
+**The `.env` is committable.** Which makes it a template. Put it in your
+project starter, share it with whoever is helping, paste it into an issue when
+something is broken.
+
+**A leaked repo leaks nothing.** The worst case for a public prototype goes
+from "rotate five keys immediately" to "someone learned which services I use."
+
+<Note>
+  Use a **separate vault path for prototypes** than for anything real —
+  `sec://aws/stripe/test#secret`, not the live key. SecRefs makes the reference
+  safe to spread around; it does not make a production credential safe to use
+  in a throwaway project.
+</Note>
+
+## Different keys per project, same file
+
+When a project needs its own credential rather than the shared one, override
+just that line:
+
+```bash .env
+# shared
+OPENAI_API_KEY=sec://aws/ai/openai#key
+
+# this project only
+STRIPE_SECRET_KEY=sec://aws/stripe/clientwork#secret
+```
+
+The reference format is the same, so there is no separate mechanism to learn —
+you are just pointing somewhere else.
+
+## Where this doesn't reach
+
+`secrefs run` works where you control the process: local dev, containers, CI,
+a coding agent running on your machine.
+
+It does not work in a hosted builder like Lovable, v0, or Bolt, because your
+app runs in their environment and they would have to resolve the reference on
+your behalf. That is exactly the integration described in
+[the pass-through design](https://github.com/secrefs/secrefs/blob/main/docs/proxy-mode-design.md),
+and it is specified but not built — deliberately, until a platform is actually
+asking for it.
+
+If you work on one of those tools, [we would like to talk](https://secrefs.com/for-vendors).

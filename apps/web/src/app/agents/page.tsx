@@ -10,6 +10,7 @@ import {
   Users,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import { NAV_LINKS } from "@/lib/nav";
 import { TerminalWindow, Line, Prompt } from "@/components/Terminal";
 
 export const metadata: Metadata = {
@@ -25,15 +26,6 @@ export const metadata: Metadata = {
     type: "article",
   },
 };
-
-const NAV_LINKS = [
-  { href: "/#how-it-works", label: "How it works" },
-  { href: "/#sandbox", label: "Sandbox" },
-  { href: "/agents", label: "For agents" },
-  { href: "/articles", label: "Articles" },
-  { href: "https://docs.secrefs.com", label: "Docs" },
-  { href: "/for-vendors", label: "For vendors" },
-];
 
 const WHY_DIFFERENT = [
   {

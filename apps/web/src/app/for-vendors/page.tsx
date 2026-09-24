@@ -11,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import { NAV_LINKS } from "@/lib/nav";
 import { TerminalWindow, Line } from "@/components/Terminal";
 
 export const metadata: Metadata = {
@@ -26,15 +27,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
-const NAV_LINKS = [
-  { href: "/#how-it-works", label: "How it works" },
-  { href: "/#providers", label: "Providers" },
-  { href: "/agents", label: "For agents" },
-  { href: "/articles", label: "Articles" },
-  { href: "https://docs.secrefs.com", label: "Docs" },
-  { href: "/for-vendors", label: "For vendors" },
-];
 
 const OUTCOMES = [
   {

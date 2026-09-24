@@ -35,6 +35,7 @@
             "group": "Guides",
             "pages": [
               "guides/load-time-vs-use-time",
+              "guides/prototyping",
               "guides/multiple-accounts",
               "guides/troubleshooting"
             ]
