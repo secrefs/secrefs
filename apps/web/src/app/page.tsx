@@ -5,6 +5,7 @@ import {
   Cloud,
   Github,
   KeyRound,
+  Layers,
   Lock,
   Server,
   Share2,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 import Sandbox from "@/components/Sandbox";
 import SiteHeader from "@/components/SiteHeader";
+import { NAV_LINKS } from "@/lib/nav";
 import { TerminalWindow, Line, Prompt } from "@/components/Terminal";
 
 const PROVIDERS = [
@@ -44,16 +46,6 @@ const PROVIDERS = [
     alias: "sec://local/mock-db#password",
     detail: "A gitignored .secrefs.local.json for teammates who don't have vault access yet.",
   },
-];
-
-const NAV_LINKS = [
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#providers", label: "Providers" },
-  { href: "#sandbox", label: "Sandbox" },
-  { href: "/agents", label: "For agents" },
-  { href: "/articles", label: "Articles" },
-  { href: "https://docs.secrefs.com", label: "Docs" },
-  { href: "/for-vendors", label: "For vendors" },
 ];
 
 const HOW_IT_WORKS = [
@@ -205,6 +197,63 @@ export default function HomePage() {
               </li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* A consequence of the .env above being safe to commit, placed
+          directly after it: if the file holds no secrets, it stops being
+          a per-project file at all. */}
+      <section id="portable" className="relative z-10 mx-auto max-w-6xl px-6 py-20">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div>
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-signal-400">
+              <Layers className="h-4 w-4" />
+              One file, every project
+            </div>
+            <h2 className="text-balance text-3xl font-bold tracking-tight text-white">
+              A <code className="text-signal-400">.env</code> with no secrets in it is just a file.
+            </h2>
+            <div className="mt-5 space-y-4 text-slate-400">
+              <p>
+                Which means you can keep one, and copy it into every new project. Same OpenAI key,
+                same Supabase project, same Stripe test keys — declared once, pointed at from
+                everywhere, and never actually duplicated.
+              </p>
+              <p>
+                Rotate one of those keys and every project you&apos;ve ever started picks it up.
+                There is no list of old prototypes to go back through, because none of them ever
+                had a copy.
+              </p>
+            </div>
+          </div>
+
+          <TerminalWindow title="~/.secrefs/starter.env">
+            <Line>OPENAI_API_KEY=sec://aws/ai/openai#key</Line>
+            <Line>SUPABASE_URL=sec://aws/supabase/dev#url</Line>
+            <Line>SUPABASE_ANON_KEY=sec://aws/supabase/dev#anon</Line>
+            <Line>STRIPE_SECRET_KEY=sec://aws/stripe/test#secret</Line>
+            <div className="h-4" />
+            <Prompt>cp ~/.secrefs/starter.env .env</Prompt>
+            <Prompt>secrefs run -- npm run dev</Prompt>
+            <Line dim>secrefs: resolved 4 secret reference(s)</Line>
+          </TerminalWindow>
+        </div>
+
+        <div className="mt-10 rounded-xl border border-white/10 bg-white/[0.02] p-6 text-sm leading-relaxed text-slate-400 sm:p-7">
+          <p>
+            <span className="font-semibold text-white">Where this works today:</span> anywhere you
+            run the process — local dev, a container, CI, a coding agent on your machine.
+          </p>
+          <p className="mt-3">
+            <span className="font-semibold text-white">Where it doesn&apos;t, yet:</span> hosted
+            builders like Lovable or v0 run your app in <em>their</em> environment, so they would
+            have to resolve the reference on your behalf. That is the same thing we are asking
+            vendors for, and it is not built.{" "}
+            <a href="/for-vendors" className="text-signal-400 hover:text-signal-300">
+              The design is public
+            </a>{" "}
+            if you work on one of these and it sounds useful.
+          </p>
         </div>
       </section>
 

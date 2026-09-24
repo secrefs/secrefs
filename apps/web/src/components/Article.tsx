@@ -20,7 +20,7 @@ export function ArticleShell({
   children: React.ReactNode;
 }) {
   return (
-    <article className="relative z-10 mx-auto max-w-2xl px-6 pb-24 pt-16 sm:pt-20">
+    <article className="relative z-10 mx-auto w-full max-w-2xl flex-1 px-6 pb-24 pt-16 sm:pt-20">
       <header className="mb-12">
         <a
           href="/articles"
