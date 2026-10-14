@@ -67,6 +67,7 @@ restores the old behavior.
 | `aws` | AWS Secrets Manager | boto3's default credential chain |
 | `vault` | HashiCorp Vault (KV v1/v2) | `VAULT_ADDR` / `VAULT_TOKEN` |
 | `bitwarden` | Bitwarden Secrets Manager | `BWS_ACCESS_TOKEN` / `BWS_ORGANIZATION_ID` |
+| `vaultwarden` | Vaultwarden, or any Bitwarden password vault, via the `bw` CLI | `BW_SESSION` from `bw unlock --raw` |
 | `local` | gitignored JSON file | n/a - development only |
 
 `bitwarden` needs the `secrefs[bitwarden]` extra: Bitwarden secrets are

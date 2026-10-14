@@ -4,6 +4,7 @@ import { AwsSecretsManagerProvider } from "./providers/aws.js";
 import { BitwardenProvider } from "./providers/bitwarden.js";
 import { LocalProvider } from "./providers/local.js";
 import { VaultProvider } from "./providers/vault.js";
+import { VaultwardenProvider } from "./providers/vaultwarden.js";
 import type { ProviderRegistry } from "./resolver.js";
 
 /**
@@ -55,6 +56,21 @@ export interface VaultAliasConfig {
   addr?: string;
 }
 
+export interface VaultwardenAliasConfig {
+  type: "vaultwarden";
+  /** Name of the env var holding the session from `bw unlock --raw`.
+   * Never the session. Defaults to BW_SESSION. */
+  sessionEnv?: string;
+  /** The server this alias must read from, e.g. https://vault.example.com.
+   * A `bw` logged in anywhere else is refused. */
+  serverUrl?: string;
+  /** bw's data directory for this alias, relative to the config file -
+   * one per server or account when several are in use. */
+  appDataDir?: string;
+  /** Run `bw sync` before the first read. Default true. */
+  sync?: boolean;
+}
+
 export interface LocalAliasConfig {
   type: "local";
   /** Path to the gitignored JSON file, relative to the config file. */
@@ -65,6 +81,7 @@ export type AliasConfig =
   | AwsAliasConfig
   | BitwardenAliasConfig
   | VaultAliasConfig
+  | VaultwardenAliasConfig
   | LocalAliasConfig;
 
 export interface SecRefsConfig {
@@ -92,6 +109,7 @@ const FORBIDDEN_KEYS = new Set([
   "apiKey",
   "credential",
   "credentials",
+  "session",
 ]);
 
 function assertNoInlineSecrets(alias: string, config: Record<string, unknown>): void {
@@ -145,10 +163,16 @@ export function parseConfig(raw: string, source = CONFIG_FILENAME): SecRefsConfi
       throw new ConfigError(`${source}: provider "${alias}" must be an object.`);
     }
     const type = (value as { type?: unknown }).type;
-    if (type !== "aws" && type !== "bitwarden" && type !== "vault" && type !== "local") {
+    if (
+      type !== "aws" &&
+      type !== "bitwarden" &&
+      type !== "vault" &&
+      type !== "vaultwarden" &&
+      type !== "local"
+    ) {
       throw new ConfigError(
         `${source}: provider "${alias}" has type ${JSON.stringify(type)}; ` +
-          `expected one of "aws", "bitwarden", "vault", "local".`,
+          `expected one of "aws", "bitwarden", "vault", "vaultwarden", "local".`,
       );
     }
     assertNoInlineSecrets(alias, value as Record<string, unknown>);
@@ -196,6 +220,14 @@ export function buildProviders(
         registry[alias] = new VaultProvider({
           endpoint: entry.addr ?? env.VAULT_ADDR,
           token: requireEnv(alias, entry.tokenEnv ?? "VAULT_TOKEN", env),
+        });
+        break;
+      case "vaultwarden":
+        registry[alias] = new VaultwardenProvider({
+          session: requireEnv(alias, entry.sessionEnv ?? "BW_SESSION", env),
+          serverUrl: entry.serverUrl,
+          appDataDir: entry.appDataDir ? resolve(configDir, entry.appDataDir) : undefined,
+          sync: entry.sync,
         });
         break;
       case "local":

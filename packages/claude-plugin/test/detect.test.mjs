@@ -65,3 +65,12 @@ test("env-file and key-name helpers", () => {
   assert.ok(!isSensitiveKey("BWS_TOKEN_ENV"));
   assert.ok(!isSensitiveKey("AWS_ACCESS_KEY_ID"));
 });
+
+test("a Bitwarden CLI session key is a credential, a session timeout is not", () => {
+  const session = "b2Fh" + "Q3dRa1lzZWtyZXRWYWx1ZUhlcmU=";
+  assert.deepEqual(
+    findLiteralSecrets(`BW_SESSION=${session}\nSESSION_KEY=${session}\nSESSION_TIMEOUT=3600\nBW_SESSION_ENV=BW_SESSION`, ".env").map((f) => f.key),
+    ["BW_SESSION", "SESSION_KEY"],
+  );
+  assert.equal(findLiteralSecrets("BW_SESSION=sec://local/bw-session", ".env").length, 0);
+});

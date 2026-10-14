@@ -19,6 +19,7 @@ export const BUILT_IN_ALIASES = {
   vault: { type: "vault" },
   local: { type: "local" },
   bitwarden: { type: "bitwarden" },
+  vaultwarden: { type: "vaultwarden" },
 };
 
 /** Parses a reference, or returns `{ error }`. */

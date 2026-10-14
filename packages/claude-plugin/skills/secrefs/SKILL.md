@@ -49,6 +49,7 @@ sec://<alias>/<path>[#<field>]
 | `sec://aws-staging/stripe` | Whole value of `stripe` in the account behind alias `aws-staging` |
 | `sec://vault/secret/data/stripe#key` | HashiCorp Vault KV v2 path, field `key` |
 | `sec://bitwarden/<secret-uuid>` | Bitwarden Secrets Manager secret by id |
+| `sec://vaultwarden/prod/stripe#api_key` | Vault item `stripe` in folder `prod`, custom field `api_key` |
 | `sec://local/mock-db#password` | Key `mock-db` in the gitignored `.secrefs.local.json` |
 
 In a `.env` file the reference can be unquoted. SecRefs' own parser keeps
@@ -60,13 +61,14 @@ reference.
 ## Aliases and configuration
 
 Call `list_aliases` before choosing an alias. Without a config file the
-aliases are the four built-ins:
+aliases are the five built-ins:
 
 | Alias | Backend | Auth comes from |
 |---|---|---|
 | `aws` | AWS Secrets Manager | The default AWS credential chain |
 | `vault` | HashiCorp Vault | `VAULT_ADDR`, `VAULT_TOKEN` |
 | `bitwarden` | Bitwarden Secrets Manager | `BWS_ACCESS_TOKEN`, `BWS_ORGANIZATION_ID` |
+| `vaultwarden` | Vaultwarden, or any Bitwarden password vault, through the `bw` CLI | `BW_SESSION` from `bw unlock --raw` |
 | `local` | `.secrefs.local.json`, gitignored | Nothing. Development only |
 
 A committed `secrefs.config.json` replaces the built-ins with named aliases,
@@ -78,15 +80,32 @@ so a project can reach several accounts:
     "aws-prod":    { "type": "aws", "profile": "acme-prod", "region": "us-east-1" },
     "aws-staging": { "type": "aws", "profile": "acme-staging" },
     "bw":          { "type": "bitwarden", "tokenEnv": "BWS_TOKEN_TEAM_A" },
+    "vw":          { "type": "vaultwarden", "serverUrl": "https://vault.example.com" },
     "dev":         { "type": "local", "file": ".secrefs.local.json" }
   }
 }
 ```
 
 This file never holds a credential. Settings name the env var or AWS
-profile that carries one (`tokenEnv`, `organizationIdEnv`, `profile`), and
+profile that carries one (`tokenEnv`, `organizationIdEnv`, `sessionEnv`, `profile`), and
 the library rejects a config with an inline secret. Never add a token,
 password or key to it.
+
+### Vaultwarden and Bitwarden password vaults
+
+Vaultwarden doesn't implement Bitwarden Secrets Manager, so the `bitwarden`
+alias can't reach it. Use a `vaultwarden` alias, which reads vault items
+through the user's unlocked `bw` CLI. It works with bitwarden.com vaults too.
+
+- Path: the item's exact name, `<folder>/<name>` when the name is used in
+  more than one folder, or the item id. Names with spaces need the id.
+- Field: none for a login's password or a note's text; `#username`, `#uri`,
+  `#totp`, `#notes`; or the name of a custom field, or a key in a note that
+  holds JSON.
+- Never run `bw login`, `bw unlock`, `bw get` or `bw list` yourself: they
+  print the session key or decrypted items. When the vault is locked, ask
+  the user to run `export BW_SESSION="$(bw unlock --raw)"` in their own
+  shell.
 
 ## Running code with references
 
@@ -108,7 +127,8 @@ load-time resolution (`secrefs run`, `init()`) for short jobs such as CI.
 `check_refs` and `secrefs check` classify failures. Act on the class:
 
 - **Cannot authenticate** (expired SSO session, missing token): the user
-  must refresh credentials, for example `aws sso login --profile <profile>`.
+  must refresh credentials, for example `aws sso login --profile <profile>`
+  or, for `vaultwarden`, unlocking `bw` again.
   Don't change the reference.
 - **Not found / no entry for path**: the path or alias is wrong, or the
   value hasn't been stored yet. Check `list_aliases` and the path with the

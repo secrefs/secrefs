@@ -182,6 +182,8 @@ export function remedyFor(kind: SecretErrorKind, provider: string, err?: unknown
       return "Set BWS_ACCESS_TOKEN to a valid Bitwarden machine account token.";
     case "vault":
       return "Set VAULT_ADDR and VAULT_TOKEN, or renew the token if it has expired.";
+    case "vaultwarden":
+      return 'Unlock the vault: export BW_SESSION="$(bw unlock --raw)" (first time: bw config server <url>, then bw login).';
     default:
       return undefined;
   }

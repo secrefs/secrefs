@@ -2,6 +2,7 @@ import { AwsSecretsManagerProvider } from "./providers/aws.js";
 import { VaultProvider } from "./providers/vault.js";
 import { LocalProvider } from "./providers/local.js";
 import { BitwardenProvider } from "./providers/bitwarden.js";
+import { VaultwardenProvider } from "./providers/vaultwarden.js";
 import { isSecretRef } from "./parser.js";
 import {
   expandKeyValueMap,
@@ -49,6 +50,11 @@ export {
   type BitwardenProviderOptions,
   type BitwardenClientLike,
 } from "./providers/bitwarden.js";
+export {
+  VaultwardenProvider,
+  type VaultwardenProviderOptions,
+  type BwRunner,
+} from "./providers/vaultwarden.js";
 
 export {
   ControlPlaneClient,
@@ -71,13 +77,14 @@ export {
   type CheckResult,
 } from "./resolver.js";
 
-/** Builds the default provider registry: aws, vault, local, bitwarden. */
+/** Builds the default provider registry: aws, vault, local, bitwarden, vaultwarden. */
 export function createDefaultProviders(): ProviderRegistry {
   return {
     aws: new AwsSecretsManagerProvider(),
     vault: new VaultProvider(),
     local: new LocalProvider(),
     bitwarden: new BitwardenProvider(),
+    vaultwarden: new VaultwardenProvider(),
   };
 }
 

@@ -27,6 +27,7 @@
             "pages": [
               "guides/aws",
               "guides/bitwarden",
+              "guides/vaultwarden",
               "guides/vault",
               "guides/local"
             ]

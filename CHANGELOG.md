@@ -10,6 +10,15 @@
   the reference syntax and aliases. `/secrefs:migrate` moves a `.env` to
   references without the values passing through the conversation. MCP tools
   check references resolve and never return a value.
+- **Vaultwarden provider** (`sec://vaultwarden/...`, Node and Python). Reads
+  items from a Vaultwarden or Bitwarden password vault through the official
+  `bw` CLI, using the session from `bw unlock --raw`. Vaultwarden doesn't
+  implement Bitwarden Secrets Manager, so the `bitwarden` provider can't reach
+  it. Items are addressed by exact name, `folder/name` or id. Fields cover the
+  login's parts, custom fields and JSON in notes. A `serverUrl` in
+  `secrefs.config.json` stops an alias from reading a different server. Added
+  to the default aliases. The Claude Code guard now also flags a literal
+  `BW_SESSION`.
 
 ## 0.3.0
 

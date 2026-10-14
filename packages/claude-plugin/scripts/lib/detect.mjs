@@ -28,7 +28,7 @@ export const TOKEN_PATTERNS = [
 const CREDENTIAL_URL = /\b[a-z][a-z0-9+.-]*:\/\/([^\s:/@'"]+):([^\s@/'"]+)@[^\s/'"]+/gi;
 
 /** Variable names that say the value is a credential. */
-const SENSITIVE_KEY = /(PASSWORD|PASSWD|PASSPHRASE|SECRET|TOKEN|API_?KEY|PRIVATE_?KEY|ACCESS_?KEY|CREDENTIAL|_DSN$|^DSN$|WEBHOOK)/i;
+const SENSITIVE_KEY = /(PASSWORD|PASSWD|PASSPHRASE|SECRET|TOKEN|API_?KEY|PRIVATE_?KEY|ACCESS_?KEY|CREDENTIAL|_DSN$|^DSN$|WEBHOOK|(^|_)SESSION(_?KEY)?$)/i;
 
 /**
  * Names that match SENSITIVE_KEY but hold something that is not itself a

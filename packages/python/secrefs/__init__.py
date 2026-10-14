@@ -19,6 +19,7 @@ from .parser import (
 from .providers.aws import AWSSecretsManagerProvider
 from .providers.base import ProviderHealth, SecretFetchError, SecretFetchRequest, SecretProvider
 from .providers.bitwarden import BitwardenProvider
+from .providers.vaultwarden import VaultwardenProvider
 from .providers.local import LocalProvider
 from .providers.vault import VaultProvider
 from .resolver import (
@@ -34,12 +35,13 @@ from .ttl_cache import TtlCache
 
 
 def create_default_providers() -> Dict[str, SecretProvider]:
-    """Builds the default provider registry: aws, vault, local, bitwarden."""
+    """Builds the default provider registry: aws, vault, local, bitwarden, vaultwarden."""
     return {
         "aws": AWSSecretsManagerProvider(),
         "vault": VaultProvider(),
         "local": LocalProvider(),
         "bitwarden": BitwardenProvider(),
+        "vaultwarden": VaultwardenProvider(),
     }
 
 
@@ -89,6 +91,7 @@ __all__ = [
     "VaultProvider",
     "LocalProvider",
     "BitwardenProvider",
+    "VaultwardenProvider",
     "SecretProvider",
     "SecretFetchRequest",
     "SecretFetchError",

@@ -134,6 +134,7 @@ tune that tradeoff — see
 | `aws` | AWS Secrets Manager | Default credential chain / IAM role |
 | `vault` | HashiCorp Vault (KV v1 & v2) | `VAULT_ADDR`, `VAULT_TOKEN` |
 | `bitwarden` | Bitwarden Secrets Manager | `BWS_ACCESS_TOKEN`, `BWS_ORGANIZATION_ID` |
+| `vaultwarden` | Vaultwarden, or any Bitwarden password vault, via the `bw` CLI | `BW_SESSION` from `bw unlock --raw` |
 | `local` | Gitignored `.secrefs.local.json` | none — development only |
 
 No provider ever needs a static credential in SecRefs' own configuration. The
