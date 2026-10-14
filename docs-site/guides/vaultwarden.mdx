@@ -1,0 +1,105 @@
+---
+title: "Vaultwarden"
+description: "sec://vaultwarden/... — items in a Vaultwarden or Bitwarden password vault, read through the bw CLI."
+---
+
+```bash
+STRIPE_KEY=sec://vaultwarden/prod/stripe#api_key
+```
+
+<Note>
+  Vaultwarden doesn't implement Bitwarden **Secrets Manager**, so the
+  [`bitwarden`](/guides/bitwarden) provider can't reach it. This provider
+  reads ordinary vault items instead. It works with any Bitwarden password
+  vault, bitwarden.com included.
+</Note>
+
+## Setup
+
+Vault items are end-to-end encrypted, and the supported way for a script to
+decrypt them is the official Bitwarden CLI. Install it, and log in once:
+
+```bash
+npm install -g @bitwarden/cli
+bw config server https://vault.example.com
+bw login
+```
+
+Then unlock it in each shell you resolve references from:
+
+```bash
+export BW_SESSION="$(bw unlock --raw)"
+```
+
+SecRefs runs `bw` with `--nointeraction`. It never prompts for your master
+password. A locked vault or an expired session is reported once as an
+authentication failure, with the command that fixes it. The session is passed
+to `bw` through its environment, never as a command-line argument, which
+other local users could read from the process list.
+
+## Addressing items
+
+| Reference | Resolves to |
+|---|---|
+| `sec://vaultwarden/stripe` | The password of the login named `stripe` |
+| `sec://vaultwarden/prod/stripe` | `stripe` in the folder `prod`, when other folders also have a `stripe` |
+| `sec://vaultwarden/9f8e7d6c-5b4a-3210-fedc-ba9876543210` | The item with that id |
+| `sec://vaultwarden/stripe#username` | The login's username |
+| `sec://vaultwarden/stripe#webhook_secret` | The custom field `webhook_secret` |
+| `sec://vaultwarden/db-config#password` | The key `password` in a secure note that holds JSON |
+
+- Names match exactly. Two items with the same name are refused rather than
+  guessed between: qualify the name by folder, or use the id.
+- With no `#field`, a login returns its password and a secure note its text.
+- The built-in fields are `password`, `username`, `uri` (the first one),
+  `totp` and `notes`. Any other field is a custom field of that name. Prefix
+  it with `fields.` if it shares a name with a built-in one.
+- References can't contain spaces, so an item or field whose name has one
+  needs its id, or a rename.
+
+## Several servers or accounts
+
+Give each its own alias in `secrefs.config.json`. `appDataDir` keeps each
+alias's `bw` login apart, and `serverUrl` makes an alias refuse to read from
+any other server:
+
+```json
+{
+  "providers": {
+    "vw-team": {
+      "type": "vaultwarden",
+      "serverUrl": "https://vault.example.com",
+      "sessionEnv": "BW_SESSION_TEAM",
+      "appDataDir": ".bw/team"
+    },
+    "vw-personal": {
+      "type": "vaultwarden",
+      "serverUrl": "https://vault.bitwarden.com",
+      "sessionEnv": "BW_SESSION_PERSONAL",
+      "appDataDir": ".bw/personal"
+    }
+  }
+}
+```
+
+Log each one in with its own data directory:
+
+```bash
+BITWARDENCLI_APPDATA_DIR=.bw/team bw config server https://vault.example.com
+BITWARDENCLI_APPDATA_DIR=.bw/team bw login
+export BW_SESSION_TEAM="$(BITWARDENCLI_APPDATA_DIR=.bw/team bw unlock --raw)"
+```
+
+`appDataDir` is resolved relative to the config file. Gitignore it: it holds
+`bw`'s encrypted copy of the vault.
+
+## Freshness and speed
+
+Before its first read, the provider runs `bw sync`, so a value rotated in the
+vault is picked up. Set `"sync": false` to skip that and read `bw`'s local
+copy.
+
+Each `bw` command starts a Node.js process and takes about a second, and a
+reference by name takes one or two of them. For a long `.env`, prefer
+`secrefs run` at startup over resolving each value at the moment of use.
+Set `SECREFS_BW_PATH` if `bw` isn't on `PATH`.

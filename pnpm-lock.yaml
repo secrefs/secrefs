@@ -195,8 +195,17 @@ importers:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@22.20.1)(jsdom@25.0.1)
 
+  packages/claude-plugin:
+    devDependencies:
+      '@secrefs/node':
+        specifier: workspace:*
+        version: link:../node
+
   packages/node:
     dependencies:
+      '@1password/sdk':
+        specifier: ^0.5.0
+        version: 0.5.0
       '@aws-sdk/client-secrets-manager':
         specifier: ^3.658.1
         version: 3.1121.0
@@ -245,6 +254,12 @@ importers:
         version: link:../node
 
 packages:
+
+  '@1password/sdk-core@0.5.0':
+    resolution: {integrity: sha512-9g7LWOKRKdePZ85evVgE9xEom3DAg3hRIyQdOwLPvpL/F7KpDXmUHMi72rsqJxKaDbWApXmrYjDExMSPqUg7xw==}
+
+  '@1password/sdk@0.5.0':
+    resolution: {integrity: sha512-k6kov3pcA7PRg2tev9CgTfEf/3JSyAp11BPQNCEsqAD32QbqM032OXC1rfjyC8Ba0sfH+NHYZxcifUZToyGyYA==}
 
   '@adobe/css-tools@4.5.0':
     resolution: {integrity: sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==}
@@ -4003,6 +4018,12 @@ packages:
     engines: {node: '>=10'}
 
 snapshots:
+
+  '@1password/sdk-core@0.5.0': {}
+
+  '@1password/sdk@0.5.0':
+    dependencies:
+      '@1password/sdk-core': 0.5.0
 
   '@adobe/css-tools@4.5.0': {}
 

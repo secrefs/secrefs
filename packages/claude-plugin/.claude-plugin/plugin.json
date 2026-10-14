@@ -1,0 +1,10 @@
+{
+  "name": "secrefs",
+  "version": "0.1.0",
+  "description": "Keep secrets out of files Claude writes: sec:// reference guidance, a guard that blocks literal secrets, /secrefs:migrate for .env files, and MCP tools that check references resolve without ever returning a value.",
+  "author": { "name": "SecRefs", "email": "hello@secrefs.com", "url": "https://secrefs.com" },
+  "homepage": "https://secrefs.com",
+  "repository": "https://github.com/secrefs/secrefs",
+  "license": "Apache-2.0",
+  "keywords": ["secrets", "security", "env", "dotenv", "vault", "aws-secrets-manager", "bitwarden"]
+}

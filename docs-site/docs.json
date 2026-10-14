@@ -27,6 +27,8 @@
             "pages": [
               "guides/aws",
               "guides/bitwarden",
+              "guides/vaultwarden",
+              "guides/1password",
               "guides/vault",
               "guides/local"
             ]
@@ -37,6 +39,7 @@
               "guides/load-time-vs-use-time",
               "guides/prototyping",
               "guides/multiple-accounts",
+              "guides/claude-code",
               "guides/troubleshooting"
             ]
           },

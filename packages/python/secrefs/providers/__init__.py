@@ -3,12 +3,16 @@ from .base import ProviderHealth, SecretFetchError, SecretFetchRequest, SecretPr
 from .bitwarden import BitwardenProvider
 from .local import LocalProvider
 from .vault import VaultProvider
+from .vaultwarden import VaultwardenProvider
+from .onepassword import OnePasswordProvider
 
 __all__ = [
     "AWSSecretsManagerProvider",
     "BitwardenProvider",
     "LocalProvider",
+    "OnePasswordProvider",
     "VaultProvider",
+    "VaultwardenProvider",
     "ProviderHealth",
     "SecretFetchError",
     "SecretFetchRequest",

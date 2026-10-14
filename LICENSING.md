@@ -7,6 +7,7 @@ directory the code lives in, and every licensed directory carries its own
 | Path | License | What it is |
 |---|---|---|
 | `packages/node` | **Apache-2.0** | `@secrefs/node` — the Node.js client library and CLI |
+| `packages/claude-plugin` | **Apache-2.0** | The Claude Code plugin |
 | `packages/python` | **Apache-2.0** | `secrefs` — the Python client library and CLI |
 | `apps/web` | **Apache-2.0** | The secrefs.com marketing site and sandbox |
 | `apps/control-plane` | **BUSL-1.1** | The control plane API |
