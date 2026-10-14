@@ -89,7 +89,7 @@ sec://<provider>/<path>[#field]
 
 | Part | Meaning |
 |---|---|
-| `provider` | Which vault to ask — `aws`, `vault`, `bitwarden`, `vaultwarden`, `local` |
+| `provider` | Which vault to ask — `aws`, `vault`, `bitwarden`, `vaultwarden`, `1password`, `local` |
 | `path` | The secret's identifier within that vault |
 | `field` | Optional. Extracts one key from a JSON secret |
 
@@ -104,6 +104,7 @@ at `prod/db`, and returns only that field.
 | HashiCorp Vault | `sec://vault/...` | `VAULT_ADDR` / `VAULT_TOKEN` from the environment. KV v1 and v2 |
 | Bitwarden | `sec://bitwarden/...` | A machine account access token |
 | Vaultwarden | `sec://vaultwarden/...` | An unlocked `bw` CLI session (`BW_SESSION`). Also reads bitwarden.com vault items |
+| 1Password | `sec://1password/...` | A service account token, or approval in the 1Password desktop app |
 | Local (dev only) | `sec://local/...` | A gitignored `.secrefs.local.json`, for teammates without vault access yet |
 
 No provider ever needs a static credential in SecRefs' own configuration.

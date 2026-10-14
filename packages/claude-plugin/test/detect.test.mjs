@@ -74,3 +74,10 @@ test("a Bitwarden CLI session key is a credential, a session timeout is not", ()
   );
   assert.equal(findLiteralSecrets("BW_SESSION=sec://local/bw-session", ".env").length, 0);
 });
+
+test("flags a 1Password service account token in any file", () => {
+  const token = "ops_" + "eyJzaWduSW5BZGRyZXNzIjoibXkuMXBhc3N3b3JkLmNvbSIsInVzZXJBdXRoIjp7";
+  const findings = findLiteralSecrets(`const t = "${token}";`, "src/op.ts");
+  assert.deepEqual(findings.map((f) => f.kind), ["1Password service account token"]);
+  assert.equal(findLiteralSecrets('const t = "ops_short";', "src/op.ts").length, 0);
+});

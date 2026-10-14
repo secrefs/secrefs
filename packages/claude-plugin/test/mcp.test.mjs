@@ -33,7 +33,7 @@ test("parse_ref splits a reference and reports malformed ones", async () => {
 
 test("list_aliases falls back to the built-ins, and reads secrefs.config.json", async () => {
   const dir = project();
-  assert.deepEqual(Object.keys((await callTool("list_aliases", { project_dir: dir })).aliases), ["aws", "vault", "local", "bitwarden", "vaultwarden"]);
+  assert.deepEqual(Object.keys((await callTool("list_aliases", { project_dir: dir })).aliases), ["aws", "vault", "local", "bitwarden", "vaultwarden", "1password"]);
   writeFileSync(path.join(dir, "secrefs.config.json"), JSON.stringify({ providers: { dev: { type: "local" } } }));
   const listed = await callTool("list_aliases", { project_dir: dir });
   assert.deepEqual(listed.aliases, { dev: { type: "local" } });

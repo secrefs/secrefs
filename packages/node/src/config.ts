@@ -5,6 +5,7 @@ import { BitwardenProvider } from "./providers/bitwarden.js";
 import { LocalProvider } from "./providers/local.js";
 import { VaultProvider } from "./providers/vault.js";
 import { VaultwardenProvider } from "./providers/vaultwarden.js";
+import { OnePasswordProvider } from "./providers/onepassword.js";
 import type { ProviderRegistry } from "./resolver.js";
 
 /**
@@ -71,6 +72,17 @@ export interface VaultwardenAliasConfig {
   sync?: boolean;
 }
 
+export interface OnePasswordAliasConfig {
+  type: "1password";
+  /** Name of the env var holding a service account token. Never the
+   * token. Defaults to OP_SERVICE_ACCOUNT_TOKEN unless `account` is set. */
+  tokenEnv?: string;
+  /** Authenticate through the 1Password desktop app as this account
+   * (its name in the app's sidebar, or its UUID) instead of a token. The
+   * app asks the person at the keyboard to approve. */
+  account?: string;
+}
+
 export interface LocalAliasConfig {
   type: "local";
   /** Path to the gitignored JSON file, relative to the config file. */
@@ -82,6 +94,7 @@ export type AliasConfig =
   | BitwardenAliasConfig
   | VaultAliasConfig
   | VaultwardenAliasConfig
+  | OnePasswordAliasConfig
   | LocalAliasConfig;
 
 export interface SecRefsConfig {
@@ -168,11 +181,12 @@ export function parseConfig(raw: string, source = CONFIG_FILENAME): SecRefsConfi
       type !== "bitwarden" &&
       type !== "vault" &&
       type !== "vaultwarden" &&
+      type !== "1password" &&
       type !== "local"
     ) {
       throw new ConfigError(
         `${source}: provider "${alias}" has type ${JSON.stringify(type)}; ` +
-          `expected one of "aws", "bitwarden", "vault", "vaultwarden", "local".`,
+          `expected one of "aws", "bitwarden", "vault", "vaultwarden", "1password", "local".`,
       );
     }
     assertNoInlineSecrets(alias, value as Record<string, unknown>);
@@ -229,6 +243,16 @@ export function buildProviders(
           appDataDir: entry.appDataDir ? resolve(configDir, entry.appDataDir) : undefined,
           sync: entry.sync,
         });
+        break;
+      case "1password":
+        // An alias names one way in. With `account` and no `tokenEnv` it is
+        // the desktop app, even if a token happens to be in the environment.
+        registry[alias] =
+          entry.account && !entry.tokenEnv
+            ? new OnePasswordProvider({ account: entry.account, serviceAccountToken: "" })
+            : new OnePasswordProvider({
+                serviceAccountToken: requireEnv(alias, entry.tokenEnv ?? "OP_SERVICE_ACCOUNT_TOKEN", env),
+              });
         break;
       case "local":
         registry[alias] = new LocalProvider({

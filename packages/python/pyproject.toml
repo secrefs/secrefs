@@ -20,9 +20,13 @@ hvac = "^2.1"
 # a sec://bitwarden/... reference. providers/bitwarden.py imports it at
 # first use and explains how to install it if it's absent.
 bitwarden-sdk = { version = "^2.1", optional = true }
+# Optional for the same reason: native wheels only. providers/onepassword.py
+# imports it at first use.
+onepassword-sdk = { version = "^0.4.1", optional = true }
 
 [tool.poetry.extras]
 bitwarden = ["bitwarden-sdk"]
+1password = ["onepassword-sdk"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2"
@@ -48,7 +52,7 @@ strict = true
 # bitwarden_sdk is additionally an optional extra, so it may legitimately
 # not be installed in the environment mypy runs in.
 [[tool.mypy.overrides]]
-module = ["boto3.*", "hvac.*", "bitwarden_sdk.*"]
+module = ["boto3.*", "hvac.*", "bitwarden_sdk.*", "onepassword.*"]
 ignore_missing_imports = true
 
 [build-system]

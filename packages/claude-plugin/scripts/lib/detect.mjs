@@ -22,6 +22,7 @@ export const TOKEN_PATTERNS = [
   ["HashiCorp Vault token", /\bhv[sb]\.[A-Za-z0-9_-]{24,}/],
   ["Bitwarden access token", /\b0\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[A-Za-z0-9]{20,}:[A-Za-z0-9+/=]{16,}/],
   ["npm token", /\bnpm_[A-Za-z0-9]{36}\b/],
+  ["1Password service account token", /\bops_[A-Za-z0-9+/=_-]{50,}/],
 ];
 
 /** A URL with an inline password: postgres://user:pass@host. */

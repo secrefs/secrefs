@@ -28,6 +28,7 @@
               "guides/aws",
               "guides/bitwarden",
               "guides/vaultwarden",
+              "guides/1password",
               "guides/vault",
               "guides/local"
             ]

@@ -19,6 +19,13 @@
   `secrefs.config.json` stops an alias from reading a different server. Added
   to the default aliases. The Claude Code guard now also flags a literal
   `BW_SESSION`.
+- **1Password provider** (`sec://1password/<vault>/<item>[/<section>]#<field>`,
+  Node and Python), through 1Password's official SDK. Authenticates with a
+  service account token (`OP_SERVICE_ACCOUNT_TOKEN`), or through the desktop
+  app (`OP_ACCOUNT`), which asks you to approve. References requested together
+  are resolved in one call. Python needs `secrefs[1password]`. Added to the
+  default aliases. The Claude Code guard now also flags 1Password service
+  account tokens.
 
 ## 0.3.0
 

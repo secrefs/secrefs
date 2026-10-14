@@ -50,6 +50,7 @@ sec://<alias>/<path>[#<field>]
 | `sec://vault/secret/data/stripe#key` | HashiCorp Vault KV v2 path, field `key` |
 | `sec://bitwarden/<secret-uuid>` | Bitwarden Secrets Manager secret by id |
 | `sec://vaultwarden/prod/stripe#api_key` | Vault item `stripe` in folder `prod`, custom field `api_key` |
+| `sec://1password/Engineering/Stripe#api_key` | 1Password item `Stripe` in vault `Engineering`, field `api_key` |
 | `sec://local/mock-db#password` | Key `mock-db` in the gitignored `.secrefs.local.json` |
 
 In a `.env` file the reference can be unquoted. SecRefs' own parser keeps
@@ -61,7 +62,7 @@ reference.
 ## Aliases and configuration
 
 Call `list_aliases` before choosing an alias. Without a config file the
-aliases are the five built-ins:
+aliases are the six built-ins:
 
 | Alias | Backend | Auth comes from |
 |---|---|---|
@@ -69,6 +70,7 @@ aliases are the five built-ins:
 | `vault` | HashiCorp Vault | `VAULT_ADDR`, `VAULT_TOKEN` |
 | `bitwarden` | Bitwarden Secrets Manager | `BWS_ACCESS_TOKEN`, `BWS_ORGANIZATION_ID` |
 | `vaultwarden` | Vaultwarden, or any Bitwarden password vault, through the `bw` CLI | `BW_SESSION` from `bw unlock --raw` |
+| `1password` | 1Password | `OP_SERVICE_ACCOUNT_TOKEN`, or `OP_ACCOUNT` to approve in the 1Password app |
 | `local` | `.secrefs.local.json`, gitignored | Nothing. Development only |
 
 A committed `secrefs.config.json` replaces the built-ins with named aliases,
@@ -81,6 +83,7 @@ so a project can reach several accounts:
     "aws-staging": { "type": "aws", "profile": "acme-staging" },
     "bw":          { "type": "bitwarden", "tokenEnv": "BWS_TOKEN_TEAM_A" },
     "vw":          { "type": "vaultwarden", "serverUrl": "https://vault.example.com" },
+    "op":          { "type": "1password", "account": "acme" },
     "dev":         { "type": "local", "file": ".secrefs.local.json" }
   }
 }
@@ -106,6 +109,18 @@ through the user's unlocked `bw` CLI. It works with bitwarden.com vaults too.
   print the session key or decrypted items. When the vault is locked, ask
   the user to run `export BW_SESSION="$(bw unlock --raw)"` in their own
   shell.
+
+### 1Password
+
+A reference is `sec://<alias>/<vault>/<item>[/<section>]#<field>`. It maps
+straight onto 1Password's `op://<vault>/<item>[/<section>]/<field>`. With no
+`#field` it reads `password`. Names with spaces are written percent-encoded
+(`My%20Vault`), or replaced by ids. `#a.b` is a field literally named `a.b`,
+not a JSON path.
+
+Never run `op read`, `op item get` or `op inject` yourself: they print
+values. If the alias uses the desktop app (`account`), resolving a reference
+makes the 1Password app ask the user to approve; tell them to expect it.
 
 ## Running code with references
 

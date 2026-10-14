@@ -3,6 +3,13 @@ import { VaultProvider } from "./providers/vault.js";
 import { LocalProvider } from "./providers/local.js";
 import { BitwardenProvider } from "./providers/bitwarden.js";
 import { VaultwardenProvider } from "./providers/vaultwarden.js";
+export {
+  OnePasswordProvider,
+  toOpReference,
+  type OnePasswordProviderOptions,
+  type OnePasswordClientLike,
+} from "./providers/onepassword.js";
+import { OnePasswordProvider } from "./providers/onepassword.js";
 import { isSecretRef } from "./parser.js";
 import {
   expandKeyValueMap,
@@ -77,7 +84,7 @@ export {
   type CheckResult,
 } from "./resolver.js";
 
-/** Builds the default provider registry: aws, vault, local, bitwarden, vaultwarden. */
+/** Builds the default provider registry: aws, vault, local, bitwarden, vaultwarden, 1password. */
 export function createDefaultProviders(): ProviderRegistry {
   return {
     aws: new AwsSecretsManagerProvider(),
@@ -85,6 +92,7 @@ export function createDefaultProviders(): ProviderRegistry {
     local: new LocalProvider(),
     bitwarden: new BitwardenProvider(),
     vaultwarden: new VaultwardenProvider(),
+    "1password": new OnePasswordProvider(),
   };
 }
 

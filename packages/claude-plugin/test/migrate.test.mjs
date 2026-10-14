@@ -54,6 +54,15 @@ test("plan uses the configured alias", () => {
   assert.equal(json.entries.find((e) => e.key === "DB_PASSWORD").suggested, "sec://aws-prod/prod/app/db-password");
 });
 
+test("plan suggests vault/item references for a 1Password alias", () => {
+  const dir = project({ providers: { op: { type: "1password", account: "my-team" } } });
+  const placeholder = run(dir, "plan", ".env");
+  assert.equal(placeholder.json.entries.find((e) => e.key === "DB_PASSWORD").suggested, "sec://op/VAULT/db-password");
+  assert.match(placeholder.json.note, /replace VAULT/);
+  const named = run(dir, "plan", ".env", "--prefix", "Engineering");
+  assert.equal(named.json.entries.find((e) => e.key === "DB_PASSWORD").suggested, "sec://op/Engineering/db-password");
+});
+
 test("apply to a local alias moves values into the local file", () => {
   const dir = project();
   const map = { DB_PASSWORD: "sec://local/db#password", VENDOR_API_KEY: "sec://local/vendor" };

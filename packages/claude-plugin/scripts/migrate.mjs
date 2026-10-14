@@ -62,7 +62,10 @@ export function plan(text, filePath, { alias, prefix, dir }) {
   const { source, aliases } = listAliases(dir);
   const names = Object.keys(aliases);
   const chosen = alias ?? (names.length === 1 ? names[0] : names.includes("local") ? "local" : names[0]);
-  const base = prefix ? prefix.replace(/^\/+|\/+$/g, "") + "/" : "";
+  // A 1Password reference needs a vault and an item. Without a prefix to
+  // name the vault, the suggestion carries a placeholder to replace.
+  const isOnePassword = aliases[chosen]?.type === "1password";
+  const base = prefix ? prefix.replace(/^\/+|\/+$/g, "") + "/" : isOnePassword ? "VAULT/" : "";
 
   const entries = [];
   text.split(/\r?\n/).forEach((line, i) => {
@@ -81,7 +84,11 @@ export function plan(text, filePath, { alias, prefix, dir }) {
     entries,
     note:
       "Values are not shown. Review the suggested references (alias, path, optional #field), " +
-      "then run apply with a map of KEY to reference for the variables to migrate.",
+      "then run apply with a map of KEY to reference for the variables to migrate." +
+      (isOnePassword
+        ? " 1Password references are <vault>/<item>[/<section>]#<field>; replace VAULT with the vault name, " +
+          "and consider grouping related values into one item's fields."
+        : ""),
   };
 }
 
