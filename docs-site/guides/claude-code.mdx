@@ -1,0 +1,58 @@
+---
+title: "Claude Code"
+description: "Have Claude write sec:// references instead of secrets, and check they resolve without ever seeing a value."
+---
+
+Coding agents tend to paste credentials straight into `.env` and config files.
+The SecRefs plugin for Claude Code stops that and gives Claude what it needs to
+write references instead.
+
+## Install
+
+In Claude Code:
+
+```
+/plugin install secrefs --marketplace secrefs/secrefs
+```
+
+Answer `y` to add the marketplace, then choose a scope. Node.js 20 or later is
+required. Resolution checks use the `@secrefs/node` installed in your project.
+
+## What Claude can and cannot do with it
+
+The plugin is built so a secret value never has to enter the conversation.
+
+- **It cannot write a literal secret into a file.** A guard refuses the edit
+  and names the file, line, variable and kind of secret, without repeating the
+  value. Claude writes `sec://<alias>/<path>#<field>` instead.
+- **It can check references without seeing values.** The `check_refs` and
+  `check_env_file` tools run the library's `check`, which reports ok or a
+  classified error per reference. No tool returns a resolved value.
+- **It can move an existing `.env` to references.** `/secrefs:migrate` shows
+  Claude variable names and suggested references only. The values move on disk:
+  into `.secrefs.local.json` for the `local` alias, or into an owner-only
+  backup for you to copy into your vault.
+- **It knows your aliases.** `list_aliases` reads `secrefs.config.json`, which
+  never holds credentials, or falls back to the built-in `aws`, `vault`,
+  `local` and `bitwarden`.
+
+## A new secret
+
+When a task needs a credential that isn't stored yet, Claude picks an alias and
+path, writes the reference, and tells you where to put the value. You store it
+in your vault yourself. Don't paste it into the chat.
+
+```
+STRIPE_KEY=sec://aws-prod/payments/stripe#secret_key
+```
+
+## False positives
+
+Add a `secrefs:allow` comment on the line, for example on a test fixture. To
+switch the guard off for a session, start Claude Code with `SECREFS_GUARD=off`.
+
+## Source
+
+The plugin lives in
+[`packages/claude-plugin`](https://github.com/secrefs/secrefs/tree/main/packages/claude-plugin)
+and is Apache-2.0.

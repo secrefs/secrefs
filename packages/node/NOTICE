@@ -4,7 +4,8 @@ Copyright 2026 Armistice Group
 This product includes software developed at Armistice Group
 (https://secrefs.com).
 
-The client libraries (packages/node, packages/python, packages/npm-alias)
+The client libraries (packages/node, packages/python, packages/npm-alias),
+the Claude Code plugin (packages/claude-plugin)
 and the marketing site (apps/web) are licensed under the Apache License,
 Version 2.0.
 

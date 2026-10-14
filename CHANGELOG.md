@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Claude Code plugin** (`packages/claude-plugin`), installed with
+  `/plugin install secrefs --marketplace secrefs/secrefs`. A PreToolUse guard
+  refuses edits that would write a literal secret into a file. A skill teaches
+  the reference syntax and aliases. `/secrefs:migrate` moves a `.env` to
+  references without the values passing through the conversation. MCP tools
+  check references resolve and never return a value.
+
 ## 0.3.0
 
 ### Changed

@@ -86,6 +86,19 @@ it.
 Point it at a real vault by changing the provider segment. Nothing else about
 your application changes.
 
+## Claude Code
+
+The SecRefs plugin makes Claude write references instead of secrets. It blocks
+edits that would put a literal secret in a file, migrates `.env` files with
+`/secrefs:migrate`, and checks references resolve without ever returning a
+value.
+
+```
+/plugin install secrefs --marketplace secrefs/secrefs
+```
+
+See [packages/claude-plugin](packages/claude-plugin).
+
 ## Two ways to expand, and when each is wrong
 
 A `sec://` reference is a **stable name for a value that changes**. Which entry
@@ -157,6 +170,7 @@ credentials worked and a policy refused one secret. See
 |---|---|---|
 | `packages/node` | TypeScript engine + `secrefs` CLI → [`@secrefs/node`](https://www.npmjs.com/package/@secrefs/node) | Apache-2.0 |
 | `packages/python` | Python SDK + `secrefs-py` CLI, API parity → [`secrefs`](https://pypi.org/project/secrefs/) | Apache-2.0 |
+| `packages/claude-plugin` | Claude Code plugin: guard, skill, `/secrefs:migrate`, MCP tools | Apache-2.0 |
 | `packages/npm-alias` | `npm install secrefs` alias for the scoped package | Apache-2.0 |
 | `apps/web` | secrefs.com + in-browser sandbox (S3 + CloudFront, CDK) | Apache-2.0 |
 | `apps/control-plane` | Org vault connections, RBAC, scoped credential minting | BUSL-1.1 |
